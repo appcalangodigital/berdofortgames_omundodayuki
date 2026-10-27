@@ -25,13 +25,14 @@ button.o{background:#ffffff1c;box-shadow:none;border:1px solid #fff5}
 body.kid .k{width:clamp(72px,22vh,96px);height:clamp(72px,22vh,96px);font-size:34px}
 body.kid #J{width:clamp(150px,44vh,230px);font-size:22px}
 body.kid #R{display:none}
+#ib{position:fixed;top:8px;right:8px;z-index:12;width:auto;margin:0;padding:8px 12px;font-size:13px}
 #tt{position:fixed;z-index:4;top:14%;left:50%;transform:translateX(-50%);background:#3b2150ee;color:#fff;padding:8px 14px;border-radius:12px;font-weight:800;font-size:14px;pointer-events:none;text-align:center;max-width:90vw}
 </style></head><body>
 <canvas id="c"></canvas>
 <div id="rot"><div style="font-size:56px;transform:rotate(90deg)">📱</div>Gire o celular para jogar</div>
 <div id="hud" class="h"><button id="pz">Ⅱ</button><b id="i1"></b><b id="i2"></b><b id="i3"></b></div>
 <div id="ctl" class="h"><div><button class="k" id="L">◀</button><button class="k" id="R">▶</button></div><button class="k" id="J">PULAR ▲</button></div>
-<div id="tt" class="h"></div><div id="ov" class="h"></div>
+<button id="ib" class="g">📲 Instalar o app</button><div id="tt" class="h"></div><div id="ov" class="h"></div>
 <script>
 (()=>{
 const $=i=>document.getElementById(i),cv=$('c'),X=cv.getContext('2d'),ov=$('ov'),cl=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -59,10 +60,10 @@ function toast(s){const e=$('tt');e.textContent=s;e.classList.remove('h');clearT
 function show(h,bt){K.l=K.r=K.j=0;ov.innerHTML='<div class="p'+(bt?' bt':'')+'">'+h+'</div>';ov.classList.remove('h');$('ctl').classList.add('h')}
 function hide(){ov.classList.add('h');if(sc=='game')$('ctl').classList.remove('h')}
 function hud(){$('i1').textContent='FASE '+lv+'/10 · '+Z.n;$('i2').textContent='🦴 '+cu;$('i3').textContent='❤ '+lives;$('i3').style.display=kid()?'none':''}
-function menu(){sc='menu';st='x';Z=TH[0];cam=0;document.body.classList.remove('kid');$('hud').classList.add('h');$('ctl').classList.add('h');$('tt').classList.add('h');
- show('<button class="s" data-a="pick" data-w="s">🌸 SAYURI <small>· a partir de 9 anos</small></button><button class="a" data-a="pick" data-w="a">🎀 AYSHA <small>· até 5 anos</small></button>',1)}
+function menu(){$('ib').classList.remove('h');sc='menu';st='x';Z=TH[0];cam=0;document.body.classList.remove('kid');$('hud').classList.add('h');$('ctl').classList.add('h');$('tt').classList.add('h');
+ show('<button class="s" data-a="pick" data-w="s">🌸 SAYURI <small>· a partir de 9 anos</small></button><button class="a" data-a="pick" data-w="a">🎀 AYSHA <small>· até 5 anos</small></button>'+(matchMedia('(display-mode: standalone)').matches||navigator.standalone?'':'<button class="o" data-a="inst" style="padding:8px">📲 Instalar o jogo no celular</button>'),1)}
 function go1(){lv=cl(prog[who],1,10);lives=3;cu=0;seed=Math.random()*1e9|0;sc='game';reset()}
-function reset(){K.l=K.r=K.j=0;paused=0;prog[who]=Math.max(prog[who],lv);save();document.body.classList.toggle('kid',kid());$('L').textContent=kid()?'✋':'◀';build();hud();hide();$('hud').classList.remove('h');
+function reset(){$('ib').classList.add('h');K.l=K.r=K.j=0;paused=0;prog[who]=Math.max(prog[who],lv);save();document.body.classList.toggle('kid',kid());$('L').textContent=kid()?'✋':'◀';build();hud();hide();$('hud').classList.remove('h');
  toast(lv==1?(kid()?'Aperte o botão grande para pular! A Yuki vai na frente!':'Fase 1 · pegue os ossinhos 🦴, bata nos blocos 🐾 por baixo e pule nos monstrinhos!'):'Fase '+lv+' · '+Z.n)}
 function addcu(n){for(let i=0;i<n;i++){cu++;if(cu%30==0&&!kid()){lives++;toast('+1 vida! Que legal!')}}hud()}
 function bk(q){const r=q[1],cs=[Math.floor((P.x+P.w/2)/t),Math.floor(P.x/t),Math.floor((P.x+P.w-.01)/t)];
@@ -255,6 +256,9 @@ function loop(n){const dt=Math.min((n-lt)/1000||0,.1);lt=n;T+=dt;
  pt.forEach(q=>{X.fillStyle=q.c;X.fillRect(q.x-cam,q.y,q.s,q.s)});
  requestAnimationFrame(loop)}
 rs();requestAnimationFrame(loop);
+let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});addEventListener('appinstalled',()=>{dp=null;$('ib').remove();toast('Instalado! Procure o ícone Yuki na tela inicial');menu()});
+A.inst=()=>{if(dp){dp.prompt();dp.userChoice.finally(()=>{dp=null})}else if(/iphone|ipad|ipod/i.test(navigator.userAgent))show('<h2>Instalar no iPhone</h2><p>Toque em Compartilhar (quadradinho com seta) e depois em "Adicionar à Tela de Início".</p><button class="g" data-a="home">OK</button>');else show('<h2>Instalar o jogo</h2><p>Abra o menu do navegador (⋮) e toque em "Instalar app" ou "Adicionar à tela inicial".</p><button class="g" data-a="home">OK</button>')};
+$('ib').onclick=()=>A.inst();if(matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone)$('ib').remove();
 if("serviceWorker" in navigator&&location.protocol.startsWith("http"))addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 })();
 </script></body></html>
