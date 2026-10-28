@@ -60,10 +60,10 @@ function toast(s){const e=$('tt');e.textContent=s;e.classList.remove('h');clearT
 function show(h,bt){K.l=K.r=K.j=0;ov.innerHTML='<div class="p'+(bt?' bt':'')+'">'+h+'</div>';ov.classList.remove('h');$('ctl').classList.add('h')}
 function hide(){ov.classList.add('h');if(sc=='game')$('ctl').classList.remove('h')}
 function hud(){$('i1').textContent='FASE '+lv+'/10 · '+Z.n;$('i2').textContent='🦴 '+cu;$('i3').textContent='❤ '+lives;$('i3').style.display=kid()?'none':''}
-function menu(){$('ib').classList.remove('h');sc='menu';st='x';Z=TH[0];cam=0;document.body.classList.remove('kid');$('hud').classList.add('h');$('ctl').classList.add('h');$('tt').classList.add('h');
+function menu(){const ib=$('ib');if(ib)ib.classList.remove('h');sc='menu';st='x';Z=TH[0];cam=0;document.body.classList.remove('kid');$('hud').classList.add('h');$('ctl').classList.add('h');$('tt').classList.add('h');
  show('<button class="s" data-a="pick" data-w="s">🌸 SAYURI <small>· a partir de 9 anos</small></button><button class="a" data-a="pick" data-w="a">🎀 AYSHA <small>· até 5 anos</small></button>'+(matchMedia('(display-mode: standalone)').matches||navigator.standalone?'':'<button class="o" data-a="inst" style="padding:8px">📲 Instalar o jogo no celular</button>'),1)}
 function go1(){lv=cl(prog[who],1,10);lives=3;cu=0;seed=Math.random()*1e9|0;sc='game';reset()}
-function reset(){$('ib').classList.add('h');K.l=K.r=K.j=0;paused=0;prog[who]=Math.max(prog[who],lv);save();document.body.classList.toggle('kid',kid());$('L').textContent=kid()?'✋':'◀';build();hud();hide();$('hud').classList.remove('h');
+function reset(){const ib=$('ib');if(ib)ib.classList.add('h');K.l=K.r=K.j=0;paused=0;prog[who]=Math.max(prog[who],lv);save();document.body.classList.toggle('kid',kid());$('L').textContent=kid()?'✋':'◀';build();hud();hide();$('hud').classList.remove('h');
  toast(lv==1?(kid()?'Aperte o botão grande para pular! A Yuki vai na frente!':'Fase 1 · pegue os ossinhos 🦴, bata nos blocos 🐾 por baixo e pule nos monstrinhos!'):'Fase '+lv+' · '+Z.n)}
 function addcu(n){for(let i=0;i<n;i++){cu++;if(cu%30==0&&!kid()){lives++;toast('+1 vida! Que legal!')}}hud()}
 function bk(q){const r=q[1],cs=[Math.floor((P.x+P.w/2)/t),Math.floor(P.x/t),Math.floor((P.x+P.w-.01)/t)];
@@ -256,9 +256,9 @@ function loop(n){const dt=Math.min((n-lt)/1000||0,.1);lt=n;T+=dt;
  pt.forEach(q=>{X.fillStyle=q.c;X.fillRect(q.x-cam,q.y,q.s,q.s)});
  requestAnimationFrame(loop)}
 rs();requestAnimationFrame(loop);
-let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});addEventListener('appinstalled',()=>{dp=null;$('ib').remove();toast('Instalado! Procure o ícone Yuki na tela inicial');menu()});
+let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e});addEventListener('appinstalled',()=>{dp=null;const ib=$('ib');if(ib)ib.remove();toast('Instalado! Procure o ícone Yuki na tela inicial');menu()});
 A.inst=()=>{if(dp){dp.prompt();dp.userChoice.finally(()=>{dp=null})}else if(/iphone|ipad|ipod/i.test(navigator.userAgent))show('<h2>Instalar no iPhone</h2><p>Toque em Compartilhar (quadradinho com seta) e depois em "Adicionar à Tela de Início".</p><button class="g" data-a="home">OK</button>');else show('<h2>Instalar o jogo</h2><p>Abra o menu do navegador (⋮) e toque em "Instalar app" ou "Adicionar à tela inicial".</p><button class="g" data-a="home">OK</button>')};
-$('ib').onclick=()=>A.inst();if(matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone)$('ib').remove();
+if($('ib')){$('ib').onclick=()=>A.inst();if(matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone)$('ib').remove()}
 if("serviceWorker" in navigator&&location.protocol.startsWith("http"))addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 })();
 </script></body></html>
